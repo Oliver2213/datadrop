@@ -1,0 +1,3 @@
+flask >= 0.10
+sqlalchemy >= 1.1
+sqlservice >= 0.14.0

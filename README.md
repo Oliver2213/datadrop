@@ -1,0 +1,4 @@
+# Datadrop: the tiny pastebin for hackers
+
+Datadrop is a simple app that lets scripts / programs (or people) upload small "drops" of data, to be retrieved at a later date.
+It doesn't have user accounts or API keys (but if they become necessary I'll add them), drop upload sizes are limited, they automatically expire after a certain period of time, and related drops can be associated with a "drop key", which is a unique string (up to 512 characters long) that can easily let you retrieve all drops that use it. Drops can also be set to self-destruct after a certain number of 'GET' requests, and be publicly listed or otherwise.
