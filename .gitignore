@@ -1,0 +1,4 @@
+# ignore .pyc files
+*.pyc
+# don't check the app's config file into git
+app/config.py
