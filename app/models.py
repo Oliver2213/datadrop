@@ -20,7 +20,7 @@ class Drop(Model):
 	title = Column(types.String(256))
 	# In the future, I might want to split the actual "data" up from the "drops" table, so as to more efficiently store repeated pieces of data
 	# but for now:
-	data = Column(types.Text(16384), nullable=False)
+	data = Column(types.Text(), nullable=False) # text isn't size limited (yet); if it becomes an issue I'll change that
 	created_at = Column(types.DateTime, default=datetime.datetime.utcnow(), nullable=False)
 	publicly_listed = Column(types.Boolean, default=config.DATADROP_DEFAULT_LISTED, nullable=False)
 	expires = Column(types.Boolean, default=config.DATADROP_DEFAULT_EXPIRES, nullable=False)

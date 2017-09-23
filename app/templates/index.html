@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% from "flask_user/_macros.html" import render_field, render_checkbox_field, render_submit_field %}
+{% block title %}Home{% endblock title %}
+
+{% block content %}
+<h1>Datadrop</h1>
+<p>Datadrop is a tiney open-source pastebin-like site for use in scripts and programs.</p>
+
+<h2>Create a new drop</h2>
+
+
+<form action="" method="POST" class="form" role="form">
+    {{ form.hidden_tag() }}
+    {{ render_field(form.title) }}
+    {{ render_field(form.drop_data) }}
+    {{ render_checkbox_field(form.publicly_listed) }}
+    {{ render_submit_field(form.submit) }}
+</form>
+
+{% endblock content %}
