@@ -10,7 +10,7 @@ def random_string(length, lowercase=True, uppercase=True):
 	if lowercase:
 		chars += string.lowercase
 	if uppercase:
-	chars += string.uppercase
+		chars += string.uppercase
 	return ''.join(random.choice(chars) for i in range(length))
 
 def get_config_items_with_prefix(config, prefix):

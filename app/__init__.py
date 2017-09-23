@@ -4,13 +4,15 @@
 from flask import Flask
 from sqlservice import SQLClient
 
-from models import Base
 import utils
 
 app = Flask(__name__)
 
 # configure the app
 app.config.from_object('app.default_config')
-app.config.from_pyfile('app.config', silent=True)
+app.config.from_pyfile('config.py', silent=True)
 
+from models import Model
 db = SQLClient(config=utils.get_config_items_with_prefix(app.config, 'SQL'), model_class=Model)
+
+import views

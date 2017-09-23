@@ -1,5 +1,6 @@
 # index view
 
+from flask import flash, render_template, redirect, url_for
 from app import app, db, models
 from app.forms import DropForm
 
@@ -11,7 +12,7 @@ def index():
 	if form.validate_on_submit():
 		drop = models.Drop()
 		if form.title.data != None and form.title.data != '':
-			drop.title = title
+			drop.title = form.title.data
 		drop.data = form.drop_data.data
 		drop.publicly_listed = form.publicly_listed.data
 		# more options will go here once the basics are working

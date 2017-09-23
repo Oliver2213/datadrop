@@ -5,7 +5,7 @@ from sqlalchemy import Column, ForeignKey, MetaData, types
 from sqlalchemy.orm import relationship
 from sqlservice import ModelBase, declarative_base
 
-import config
+from app import app
 import utils
 
 
@@ -16,16 +16,16 @@ class Drop(Model):
 	"""Represents a single "drop" of data, as well as any drop keys it's associated with it."""
 	__tablename__ = 'drops'
 	id = Column(types.Integer, primary_key=True)
-	urlstring = Column(types.String(256), default=utils.random_string(config.DATADROP_URLSTRING_LENGTH), unique=True, nullable=False)
+	urlstring = Column(types.String(256), default=utils.random_string(app.config['DATADROP_URLSTRING_LENGTH']), unique=True, nullable=False)
 	title = Column(types.String(256))
 	# In the future, I might want to split the actual "data" up from the "drops" table, so as to more efficiently store repeated pieces of data
 	# but for now:
 	data = Column(types.Text(), nullable=False) # text isn't size limited (yet); if it becomes an issue I'll change that
 	created_at = Column(types.DateTime, default=datetime.datetime.utcnow(), nullable=False)
-	publicly_listed = Column(types.Boolean, default=config.DATADROP_DEFAULT_LISTED, nullable=False)
-	expires = Column(types.Boolean, default=config.DATADROP_DEFAULT_EXPIRES, nullable=False)
-	expires_in = Column(types.Integer, default=config.DATADROP_MIN_EXPIRE_TIME+config.DATADROP_MAX_EXPIRE_TIME/2)
-	self_destructs = Column(types.Boolean, default=config.DATADROP_DEFAULT_SELF_DESTRUCTS)
+	publicly_listed = Column(types.Boolean, default=app.config['DATADROP_DEFAULT_LISTED'], nullable=False)
+	expires = Column(types.Boolean, default=app.config['DATADROP_DEFAULT_EXPIRES'], nullable=False)
+	expires_in = Column(types.Integer, default=app.config['DATADROP_MIN_EXPIRE_TIME']+app.config['DATADROP_MAX_EXPIRE_TIME']/2)
+	self_destructs = Column(types.Boolean, default=app.config['DATADROP_DEFAULT_SELF_DESTRUCTS'])
 	drop_keys = relationship('DropKey', secondary='drop_key_associations', back_populates='drops')
 
 
