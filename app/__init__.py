@@ -17,5 +17,4 @@ from models import Model
 db = SQLClient(config=utils.get_config_items_with_prefix(app.config, 'SQL'), model_class=Model)
 moment = Moment(app)
 
-import template_contexts
 import views
