@@ -3,6 +3,7 @@
 
 from flask import Flask
 from sqlservice import SQLClient
+from flask_moment import Moment
 
 import utils
 
@@ -14,5 +15,7 @@ app.config.from_pyfile('config.py', silent=True)
 
 from models import Model
 db = SQLClient(config=utils.get_config_items_with_prefix(app.config, 'SQL'), model_class=Model)
+moment = Moment(app)
 
+import template_contexts
 import views

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}{% if drop.title %}{{ drop.title }}{% else %}Untitled{% endif %}{% endblock title %}
+
+{% block content %}
+<h1>{% if drop.title %}{{ drop.title }}{% else %}Untitled drop{% endif %} (posted {{ moment(drop.created_at).fromNow() }})</h1>
+<a href="{{ url_for('show_raw_drop', urlstring=drop.urlstring) }}">show raw</a>
+<hr>
+<pre>
+{{ drop.data }}
+</pre>
+
+{% endblock content %}
