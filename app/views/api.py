@@ -3,7 +3,7 @@
 from collections import OrderedDict
 from flask import jsonify, url_for, redirect, request
 
-from app import app, db, models
+from app import app, db, models, utils
 
 
 @app.route('/api/drop/create', methods=['POST'])
@@ -35,6 +35,13 @@ def api_create_drop():
 				potential_key = db.save(models.DropKey(key=k.lower()))
 			drop_keys.append(potential_key)
 		drop.drop_keys = drop_keys
+	# to avoid unique urlstring errors
+	made_urlstring = False
+	while made_urlstring == False:
+		u = utils.random_string(constants.DATADROP_URLSTRING_LENGTH)
+		if db.Drop.filter_by(urlstring=u).one_or_none() == None:
+			found_urlstring = True
+			drop.urlstring = u
 	db.save(drop)
 	# now build the response
 	r = get_drop_dict(drop, include_drop_keys=True)
