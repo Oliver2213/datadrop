@@ -22,4 +22,4 @@ def show_raw_drop(urlstring):
 		resp = Response(drop.data, mimetype='text/plain')
 		return resp
 	else:
-		return render_template('drop_not_found'), 404
+		return render_template('drop_not_found.html'), 404
