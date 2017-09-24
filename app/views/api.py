@@ -38,7 +38,7 @@ def api_create_drop():
 	# to avoid unique urlstring errors
 	made_urlstring = False
 	while made_urlstring == False:
-		u = utils.random_string(app.config[DATADROP_URLSTRING_LENGTH'])
+		u = utils.random_string(app.config['DATADROP_URLSTRING_LENGTH'])
 		if db.Drop.filter_by(urlstring=u).one_or_none() == None:
 			found_urlstring = True
 			drop.urlstring = u
