@@ -7,7 +7,7 @@ from app import app, db, models
 
 
 @app.route('/api/drop/create', methods=['POST'])
-def create_drop():
+def api_create_drop():
 	"""API view function to create a new drop."""
 	if request.form.get('data') == None:
 		return jsonify({"error": "You must provide some data when creating a new drop."}), 400
@@ -35,18 +35,37 @@ def create_drop():
 				potential_key = db.save(models.DropKey(key=k.lower()))
 			drop_keys.append(potential_key)
 		drop.drop_keys = drop_keys
-		db.save(drop)
-		# now build the response
-		r = OrderedDict()
-		if drop.title:
-			r['title'] = drop.title
-		r['url'] = url_for('show_drop', urlstring=drop.urlstring, _external=True)
-		r['created_at'] = drop.created_at
-		r['publicly_listed'] = drop.publicly_listed
-		r['expires'] = drop.expires
-		if drop.expires:
-			r['expires_in'] = drop.expires_in
-		r['self_destructs'] = drop.self_destructs
-		if drop.drop_keys:
-			r['drop_keys'] = [k.key for k in drop.drop_keys]
-		return jsonify(r), 201
+	db.save(drop)
+	# now build the response
+	r = get_drop_dict(drop, include_drop_keys=True)
+	return jsonify(r), 201
+
+
+@app.route('/api/drop/show')
+def api_show_drop(include_drop_keys=False):
+	"""Return a jsonified response with information about a given response (using an id form parameter)."""
+	urlstring = request.data.get('id')
+	if urlstring == None:
+		return jsonify({"error": "You must provide the ID of a drop to retrieve information for."}), 400
+	drop = db.Drop.filter_by(urlstring=urlstring).one_or_none()
+	if drop == None:
+		return jsonify({"error": "No drop was found with the given ID."})
+	else: # drop found
+		res = get_drop_dict(drop)
+		return jsonify(res)
+
+
+def get_drop_dict(drop, include_drop_keys=False):
+	r = OrderedDict()
+	if drop.title:
+		r['title'] = drop.title
+	r['url'] = url_for('show_drop', urlstring=drop.urlstring, _external=True)
+	r['created_at'] = drop.created_at
+	r['publicly_listed'] = drop.publicly_listed
+	r['expires'] = drop.expires
+	if drop.expires:
+		r['expires_in'] = drop.expires_in
+	r['self_destructs'] = drop.self_destructs
+	if include_drop_keys and drop.drop_keys:
+		r['drop_keys'] = [k.key for k in drop.drop_keys]
+	return r
