@@ -1,5 +1,6 @@
 # index view
 
+import datetime
 from flask import flash, render_template, redirect, url_for
 from app import app, db, models
 from app.forms import DropForm
@@ -13,6 +14,7 @@ def index():
 		drop = models.Drop()
 		if form.title.data != None and form.title.data != '':
 			drop.title = form.title.data
+		drop.created_at = datetime.datetime.utcnow()
 		drop.data = form.drop_data.data
 		drop.publicly_listed = form.publicly_listed.data
 		# more options will go here once the basics are working

@@ -1,6 +1,7 @@
 # API view functions
 
 from collections import OrderedDict
+import datetime
 from flask import jsonify, url_for, redirect, request
 
 from app import app, db, models, utils
@@ -15,6 +16,7 @@ def api_create_drop():
 	title = request.form.get('title')
 	if title != None and title != '':
 		drop.title = title
+	ddrop.created_at = datetime.datetime.utcnow()
 	drop.data = request.form.get('data')
 	publicly_listed = request.form.get('publicly_listed', app.config['DATADROP_DEFAULT_LISTED'])
 	drop.publicly_listed = publicly_listed
