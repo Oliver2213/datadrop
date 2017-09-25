@@ -7,6 +7,9 @@ from app import app, db, models
 @app.route('/drop/<urlstring>')
 def show_drop(urlstring):
 	"""Return a page containing the given drop (if the given urlstring exists)."""
+	# an edge case to handle URLs that have a period on the end (some people don't clean up urls in sentences, imagine that)
+	if urlstring.endswith('.'):
+		urlstring = urlstring[:-1]
 	drop = db.Drop.filter_by(urlstring=urlstring).one_or_none()
 	if drop != None: # a drop with the provided urlstring exists
 		return render_template('drop.html', drop=drop)
