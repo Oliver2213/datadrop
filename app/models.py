@@ -22,10 +22,14 @@ class Drop(Model):
 	# but for now:
 	data = Column(types.Text(), nullable=False) # text isn't size limited (yet); if it becomes an issue I'll change that
 	created_at = Column(types.DateTime, default=datetime.datetime.utcnow(), nullable=False)
+	views = Column(types.Integer, default=0)
 	publicly_listed = Column(types.Boolean, default=app.config['DATADROP_DEFAULT_LISTED'], nullable=False)
 	expires = Column(types.Boolean, default=app.config['DATADROP_DEFAULT_EXPIRES'], nullable=False)
-	expires_in = Column(types.Integer, default=app.config['DATADROP_MIN_EXPIRE_TIME']+app.config['DATADROP_MAX_EXPIRE_TIME']/2)
+	# expires_ is a time in seconds, after which any drop which is set to expire will be deleted
+	expires_in = Column(types.Integer, default=app.config['DATADROP_DEFAULT_EXPIRES_IN'])
 	self_destructs = Column(types.Boolean, default=app.config['DATADROP_DEFAULT_SELF_DESTRUCTS'])
+	# self_destructs_in is the number of views (which once reached), any drop that is set to self destruct will be deleted
+	self_destructs_in = Column(types.Integer, default=app.config['DATADROP_DEFAULT_SELF_DESTRUCTS_IN'])
 	drop_keys = relationship('DropKey', secondary='drop_key_associations', back_populates='drops')
 
 
