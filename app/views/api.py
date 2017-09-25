@@ -40,7 +40,7 @@ def api_create_drop():
 	while made_urlstring == False:
 		u = utils.random_string(app.config['DATADROP_URLSTRING_LENGTH'])
 		if db.Drop.filter_by(urlstring=u).one_or_none() == None:
-			found_urlstring = True
+			made_urlstring = True
 			drop.urlstring = u
 	db.save(drop)
 	# now build the response
