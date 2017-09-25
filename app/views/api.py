@@ -27,6 +27,7 @@ def api_create_drop():
 	self_destructs = request.form.get('self_destructs', app.config['DATADROP_DEFAULT_SELF_DESTRUCTS'])
 	drop.self_destructs = self_destructs
 	self_destructs_in = int(request.form.get('self_destructs_in', app.config['DATADROP_DEFAULT_SELF_DESTRUCTS_IN']))
+	drop.self_destructs_in = self_destructs_in
 	drop_key_strings = request.form.getlist('drop_keys')
 	if drop_key_strings != None and drop_key_strings != []:
 		# for each drop key that was provided, check if it exists in the database;
@@ -56,10 +57,10 @@ def api_show_drop(include_drop_keys=False):
 	"""Return a jsonified response with information about a given response (using an id form parameter)."""
 	urlstring = request.data.get('id')
 	if urlstring == None:
-		return jsonify({"error": "You must provide the ID of a drop to retrieve information for."}), 400
+		return jsonify({"error": "You must provide the ID of a drop for which you want information."}), 400
 	drop = db.Drop.filter_by(urlstring=urlstring).one_or_none()
 	if drop == None:
-		return jsonify({"error": "No drop was found with the given ID."})
+		return jsonify({"error": "No drop was found with the given ID."}), 404
 	else: # drop found
 		res = get_drop_dict(drop)
 		return jsonify(res)
@@ -69,6 +70,7 @@ def get_drop_dict(drop, include_drop_keys=False):
 	r = OrderedDict()
 	if drop.title:
 		r['title'] = drop.title
+	r['id'] = drop.urlstring
 	r['url'] = url_for('show_drop', urlstring=drop.urlstring, _external=True)
 	r['created_at'] = drop.created_at
 	r['publicly_listed'] = drop.publicly_listed
@@ -76,6 +78,8 @@ def get_drop_dict(drop, include_drop_keys=False):
 	if drop.expires:
 		r['expires_in'] = drop.expires_in
 	r['self_destructs'] = drop.self_destructs
+	if drop.self_destructs:
+		r['self_destructs_in'] = drop.self_destructs_in
 	if include_drop_keys and drop.drop_keys:
 		r['drop_keys'] = [k.key for k in drop.drop_keys]
 	return r
