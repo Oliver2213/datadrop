@@ -16,16 +16,17 @@ def api_create_drop():
 	title = request.form.get('title')
 	if title != None and title != '':
 		drop.title = title
-	ddrop.created_at = datetime.datetime.utcnow()
+	drop.created_at = datetime.datetime.utcnow()
 	drop.data = request.form.get('data')
 	publicly_listed = request.form.get('publicly_listed', app.config['DATADROP_DEFAULT_LISTED'])
 	drop.publicly_listed = publicly_listed
 	expires = request.form.get('expires', app.config['DATADROP_DEFAULT_EXPIRES'])
 	drop.expires = expires
-	expires_in = request.form.get('expires_in', app.config['DATADROP_DEFAULT_EXPIRES_IN'])
+	expires_in = int(request.form.get('expires_in', app.config['DATADROP_DEFAULT_EXPIRES_IN']))
 	drop.expires_in = expires_in
 	self_destructs = request.form.get('self_destructs', app.config['DATADROP_DEFAULT_SELF_DESTRUCTS'])
 	drop.self_destructs = self_destructs
+	self_destructs_in = int(request.form.get('self_destructs_in', app.config['DATADROP_DEFAULT_SELF_DESTRUCTS_IN']))
 	drop_key_strings = request.form.getlist('drop_keys')
 	if drop_key_strings != None and drop_key_strings != []:
 		# for each drop key that was provided, check if it exists in the database;
