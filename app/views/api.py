@@ -3,6 +3,7 @@
 from collections import OrderedDict
 import datetime
 import pytimeparse
+import arrow
 from flask import jsonify, url_for, redirect, request
 
 from app import app, db, models, utils
@@ -79,6 +80,8 @@ def get_drop_dict(drop, include_drop_keys=False):
 	r['expires'] = drop.expires
 	if drop.expires:
 		r['expires_in'] = drop.expires_in
+		# include a humanized time representation for when the drop will expire
+		r['expires_in_humanized'] = arrow.get(drop.expires_on()).humanize(arrow.utcnow())
 	r['self_destructs'] = drop.self_destructs
 	if drop.self_destructs:
 		r['self_destructs_in'] = drop.self_destructs_in
