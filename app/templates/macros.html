@@ -7,6 +7,9 @@
             <label for="{{ field.id }}" class="control-label">{{ label|safe }}</label>
         {% endif %}
         {{ field(class_='form-control', **kwargs) }}
+        {% if field.description %}
+            <p>{{ field.description }}</p>
+        {% endif %}
         {% if field.errors %}
             {% for e in field.errors %}
                 <p class="help-block">{{ e }}</p>
@@ -21,6 +24,10 @@
         <label>
             {{ field(type='checkbox', **kwargs) }} {{ label }}
         </label>
+    {% if field.description %}
+        <p>{{ field.description }}</p>
+    {% endif %}
+
     </div>
 {%- endmacro %}
 
@@ -33,6 +40,10 @@
             </label>
         </div>
     {% endfor %}
+    {% if field.description %}
+        <p>{{ field.description }}</p>
+    {% endif %}
+
 {%- endmacro %}
 
 {% macro render_submit_field(field, label=None, tabindex=None) -%}
