@@ -1,6 +1,7 @@
 # database models for datadrop
 
 import datetime
+import pytimeparse
 from sqlalchemy import Column, ForeignKey, MetaData, types
 from sqlalchemy.orm import relationship
 from sqlservice import ModelBase, declarative_base
@@ -25,8 +26,9 @@ class Drop(Model):
 	views = Column(types.Integer, default=0)
 	publicly_listed = Column(types.Boolean, default=app.config['DATADROP_DEFAULT_LISTED'], nullable=False)
 	expires = Column(types.Boolean, default=app.config['DATADROP_DEFAULT_EXPIRES'], nullable=False)
-	# expires_ is a time in seconds, after which any drop which is set to expire will be deleted
-	expires_in = Column(types.Integer, default=app.config['DATADROP_DEFAULT_EXPIRES_IN'])
+	# expires_ is a time (in a human-friendly format parsed by pytimeparse), after which any drop which is set to expire will be deleted
+	# The default is retrieved from the app's config, so **make sure it parses with pytimeparse**
+	expires_in = Column(types.Integer, default=pytimeparse.parse(app.config['DATADROP_DEFAULT_EXPIRES_IN']))
 	self_destructs = Column(types.Boolean, default=app.config['DATADROP_DEFAULT_SELF_DESTRUCTS'])
 	# self_destructs_in is the number of views (which once reached), any drop that is set to self destruct will be deleted
 	self_destructs_in = Column(types.Integer, default=app.config['DATADROP_DEFAULT_SELF_DESTRUCTS_IN'])
