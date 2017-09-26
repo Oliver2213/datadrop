@@ -2,6 +2,7 @@
 
 from collections import OrderedDict
 import datetime
+import pytimeparse
 from flask import jsonify, url_for, redirect, request
 
 from app import app, db, models, utils
@@ -22,8 +23,9 @@ def api_create_drop():
 	drop.publicly_listed = publicly_listed
 	expires = request.form.get('expires', app.config['DATADROP_DEFAULT_EXPIRES'])
 	drop.expires = expires
-	expires_in = int(request.form.get('expires_in', app.config['DATADROP_DEFAULT_EXPIRES_IN']))
-	drop.expires_in = expires_in
+	expires_in_string = request.form.get('expires_in', app.config['DATADROP_DEFAULT_EXPIRES_IN'])
+	# set the parsed expire time (in seconds); if it's invalid, the default is used
+	drop.expires_in = pytimeparse.parse(expires_in_string)
 	self_destructs = request.form.get('self_destructs', app.config['DATADROP_DEFAULT_SELF_DESTRUCTS'])
 	drop.self_destructs = self_destructs
 	self_destructs_in = int(request.form.get('self_destructs_in', app.config['DATADROP_DEFAULT_SELF_DESTRUCTS_IN']))
