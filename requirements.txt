@@ -5,3 +5,4 @@ wtforms
 flask-wtf
 flask-moment
 alembic
+pytimeparse
