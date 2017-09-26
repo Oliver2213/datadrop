@@ -35,6 +35,12 @@ class Drop(Model):
 	drop_keys = relationship('DropKey', secondary='drop_key_associations', back_populates='drops')
 
 
+	def expires_on(self):
+		"""Not to be confused with 'expires_in', which is the number of seconds after a drop's creation after which it will be deleted; this returns a datetime object indicating when exactly that deletion will happen after."""
+		deleted_after = self.created_at+datetime.timedelta(seconds=self.expires_in)
+		return deleted_after
+
+
 class DropKey(Model):
 	"""Represents a "drop key", or a unique string of text that associates many "drops" together."""
 	__tablename__ = 'drop_keys'

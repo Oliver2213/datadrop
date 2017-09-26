@@ -4,6 +4,12 @@
 {% block content %}
 <h1>{% if drop.title %}{{ drop.title }}{% else %}Untitled drop{% endif %} (posted {{ moment(drop.created_at).fromNow() }})</h1>
 <a href="{{ url_for('show_raw_drop', urlstring=drop.urlstring) }}">show raw</a>
+{% if drop.expires %}
+    <p>This drop will automatically be deleted {{ moment(drop.expires_on()).fromNow() }}.</p>
+{% endif %}
+{% if drop.self_destructs %}
+    <p>This drop will automatically be deleted after a certain number of retrievals.</p>
+{% endif %}
 <hr>
 <pre>
 {{ drop.data }}
