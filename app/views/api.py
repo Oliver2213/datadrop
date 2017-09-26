@@ -51,7 +51,7 @@ def api_create_drop():
 			drop.urlstring = u
 	db.save(drop)
 	# now build the response
-	r = get_drop_dict(drop, include_drop_keys=True)
+	r = get_drop_dict(drop, include_drop_keys=True, just_created=True)
 	return jsonify(r), 201
 
 
@@ -69,7 +69,7 @@ def api_show_drop(include_drop_keys=False):
 		return jsonify(res)
 
 
-def get_drop_dict(drop, include_drop_keys=False):
+def get_drop_dict(drop, include_drop_keys=False, just_created=False):
 	r = OrderedDict()
 	if drop.title:
 		r['title'] = drop.title
@@ -81,7 +81,13 @@ def get_drop_dict(drop, include_drop_keys=False):
 	if drop.expires:
 		r['expires_in'] = drop.expires_in
 		# include a humanized time representation for when the drop will expire
-		r['expires_in_humanized'] = arrow.get(drop.expires_on()).humanize(arrow.utcnow())
+		# if a drop was just created, use that timestamp in the humanization; otherwise, use the current time
+		# this prevents arrow from returning 6 days when a drop was set to expire in 7 (because a tiney bit of time has passed since that timestamp was recorded and now, so arrow rounds down)
+		if just_created:
+			start_time = drop.created_at
+		else:
+			start_time = arrow.utcnow()
+		r['expires_in_humanized'] = arrow.get(drop.expires_on()).humanize(start_time)
 	r['self_destructs'] = drop.self_destructs
 	if drop.self_destructs:
 		r['self_destructs_in'] = drop.self_destructs_in
