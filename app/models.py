@@ -21,7 +21,7 @@ class Drop(Model):
 	title = Column(types.String(256))
 	# In the future, I might want to split the actual "data" up from the "drops" table, so as to more efficiently store repeated pieces of data
 	# but for now:
-	data = Column(types.Text(), nullable=False) # text isn't size limited (yet); if it becomes an issue I'll change that
+	data = Column(types.Text(268435456), nullable=False) # Limited to 256 mb
 	created_at = Column(types.DateTime, default=datetime.datetime.utcnow(), nullable=False)
 	views = Column(types.Integer, default=0)
 	publicly_listed = Column(types.Boolean, default=app.config['DATADROP_DEFAULT_LISTED'], nullable=False)
